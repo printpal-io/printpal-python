@@ -1,0 +1,102 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "printpal"
+version = "1.0.0"
+description = "Python client for the PrintPal 3D Generation API"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "PrintPal", email = "support@printpal.io"}
+]
+maintainers = [
+    {name = "PrintPal", email = "support@printpal.io"}
+]
+requires-python = ">=3.7"
+dependencies = [
+    "requests>=2.25.0",
+]
+keywords = [
+    "printpal",
+    "3d",
+    "3d-generation",
+    "3d-printing",
+    "ai",
+    "machine-learning",
+    "image-to-3d",
+    "text-to-3d",
+    "stl",
+    "glb",
+    "obj",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://printpal.io"
+Documentation = "https://printpal.io/api/documentation"
+Repository = "https://github.com/printpal-io/printpal-python"
+Issues = "https://github.com/printpal-io/printpal-python/issues"
+Changelog = "https://github.com/printpal-io/printpal-python/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "black>=21.0",
+    "flake8>=3.9",
+    "mypy>=0.900",
+    "types-requests>=2.25.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["printpal*"]
+exclude = ["tests*", "examples*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py37", "py38", "py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
