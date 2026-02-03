@@ -58,7 +58,7 @@ def main():
     result = client.generate_from_prompt(
         prompt=prompt,
         quality=Quality.DEFAULT,
-        format=Format.GLB,
+        format=Format.STL,  # Default format for 3D printing
     )
     
     print(f"Generation submitted!")
@@ -84,7 +84,7 @@ def main():
         # Create safe filename from prompt
         safe_name = "".join(c if c.isalnum() or c in "- " else "" for c in prompt)
         safe_name = safe_name[:30].strip().replace(" ", "_")
-        output_name = f"text_to_3d_{safe_name}.glb"
+        output_name = f"text_to_3d_{safe_name}.stl"
         
         # Download the model
         output_path = client.download(result.generation_uid, output_path=output_name)

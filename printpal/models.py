@@ -15,8 +15,8 @@ class GenerationRequest:
     quality: Quality = Quality.DEFAULT
     """Quality level for generation."""
     
-    format: Format = Format.GLB
-    """Output format for the 3D model."""
+    format: Format = Format.STL
+    """Output format for the 3D model. Defaults to STL for 3D printing."""
     
     num_inference_steps: int = 20
     """Number of inference steps (1-50). Higher values may improve quality but take longer.

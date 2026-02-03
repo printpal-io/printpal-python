@@ -436,7 +436,7 @@ Streamline CAD model generation from reference images. Integrate with your exist
 
 ## Support
 
-- Email: info@printpal.io
+- Email: support@printpal.io
 - Documentation: https://printpal.io/api/documentation
 - Issues: https://github.com/printpal-io/printpal-python/issues
 

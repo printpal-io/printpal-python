@@ -229,6 +229,80 @@ class PrintPal:
         return self._request("GET", "/api/health")
     
     # =========================================================================
+    # Helper Methods
+    # =========================================================================
+    
+    def _infer_format_from_path(self, output_path: Optional[Union[str, Path]]) -> Format:
+        """
+        Infer the output format from a file path's extension.
+        
+        Args:
+            output_path: The output file path to analyze.
+        
+        Returns:
+            Format: The inferred format, or STL as the default.
+        """
+        if output_path is None:
+            return Format.STL
+        
+        path = Path(output_path)
+        ext = path.suffix.lower().lstrip(".")
+        
+        # Map extensions to Format enum
+        extension_map = {
+            "stl": Format.STL,
+            "glb": Format.GLB,
+            "obj": Format.OBJ,
+            "ply": Format.PLY,
+            "fbx": Format.FBX,
+        }
+        
+        return extension_map.get(ext, Format.STL)
+    
+    def _ensure_correct_extension(
+        self, 
+        output_path: Path, 
+        actual_format: str
+    ) -> Path:
+        """
+        Ensure the output path has the correct extension for the actual format.
+        
+        If the user-provided path has an extension that doesn't match the actual
+        format from the API, update the path to use the correct extension to
+        avoid creating misleading or corrupted files.
+        
+        Args:
+            output_path: The user-provided output path.
+            actual_format: The actual format returned by the API.
+        
+        Returns:
+            Path: The corrected output path with proper extension.
+        """
+        # Normalize the actual format
+        actual_ext = actual_format.lower()
+        
+        # Get the current extension (without dot)
+        current_ext = output_path.suffix.lower().lstrip(".")
+        
+        # If extension matches, no change needed
+        if current_ext == actual_ext:
+            return output_path
+        
+        # If extension doesn't match, replace it with the correct one
+        # This prevents saving a GLB file as .stl which would be misleading
+        if current_ext:
+            # Has an extension but it's wrong - replace it
+            corrected_path = output_path.with_suffix(f".{actual_ext}")
+            logger.warning(
+                f"Output extension '.{current_ext}' does not match actual format "
+                f"'{actual_ext}'. Saving to: {corrected_path}"
+            )
+            return corrected_path
+        else:
+            # No extension - add the correct one
+            return Path(str(output_path) + f".{actual_ext}")
+    
+    # =========================================================================
     # Generation Methods
     # =========================================================================
     
@@ -236,7 +310,7 @@ class PrintPal:
         self,
         image_path: Union[str, Path, BinaryIO],
         quality: Quality = Quality.DEFAULT,
-        format: Format = Format.GLB,
+        format: Format = Format.STL,
         num_inference_steps: int = 20,
         guidance_scale: float = 5.0,
         octree_resolution: int = 256,
@@ -328,7 +402,7 @@ class PrintPal:
         self,
         prompt: str,
         quality: Quality = Quality.DEFAULT,
-        format: Format = Format.GLB,
+        format: Format = Format.STL,
         num_inference_steps: int = 20,
         guidance_scale: float = 5.0,
         octree_resolution: int = 256,
@@ -461,6 +535,11 @@ class PrintPal:
         """
         Download a completed 3D model.
         
+        The file will be saved with the correct extension matching the actual
+        format returned by the API. If you specify a filename with an extension
+        that doesn't match the actual format, the extension will be corrected
+        to prevent saving corrupted or misleading files.
+        
         Args:
             generation_uid: The unique identifier for the generation.
             output_path: Where to save the file. If not provided, saves to current
@@ -481,7 +560,7 @@ class PrintPal:
         # Get the download URL
         download_info = self.get_download_url(generation_uid)
         download_url = download_info.get("download_url")
-        file_format = download_info.get("format", "glb")
+        file_format = download_info.get("format", "stl")
         
         if not download_url:
             raise GenerationError("No download URL available", generation_uid=generation_uid)
@@ -489,6 +568,8 @@ class PrintPal:
         # Determine output path
         if output_path:
             output_path = Path(output_path)
+            # Ensure the extension matches the actual format from the API
+            output_path = self._ensure_correct_extension(output_path, file_format)
         else:
             output_path = Path(f"printpal_model_{generation_uid[:8]}.{file_format}")
         
@@ -625,7 +706,7 @@ class PrintPal:
         image_path: Union[str, Path, BinaryIO],
         output_path: Optional[Union[str, Path]] = None,
         quality: Quality = Quality.DEFAULT,
-        format: Format = Format.GLB,
+        format: Optional[Format] = None,
         poll_interval: int = 5,
         timeout: Optional[int] = None,
         callback: Optional[Callable[[GenerationStatus], None]] = None,
@@ -638,9 +719,12 @@ class PrintPal:
         
         Args:
             image_path: Path to the image file.
-            output_path: Where to save the model.
+            output_path: Where to save the model. If the filename has a recognized
+                extension (stl, glb, obj, ply, fbx) and no format is specified,
+                that extension will be used as the format.
             quality: Quality level for generation.
-            format: Output format.
+            format: Output format. If None, will be inferred from output_path
+                extension or default to STL.
             poll_interval: Seconds between status checks.
             timeout: Maximum seconds to wait.
             callback: Optional status callback function.
@@ -650,8 +734,18 @@ class PrintPal:
             Path: Path to the downloaded 3D model.
         
         Example:
-            # Simplest usage
+            # Simplest usage - infers STL format from extension
             path = client.generate_and_download("my_image.png", "my_model.stl")
+            
+            # Extension determines format (OBJ)
+            path = client.generate_and_download("my_image.png", "my_model.obj")
+            
+            # Explicit format overrides extension
+            path = client.generate_and_download(
+                "my_image.png",
+                "my_model.stl",
+                format=Format.GLB  # Will save as GLB despite .stl extension
+            )
             
             # With quality setting
             path = client.generate_and_download(
@@ -661,6 +755,10 @@ class PrintPal:
                 callback=lambda s: print(f"Status: {s.status}")
             )
         """
+        # Infer format from output_path extension if not explicitly provided
+        if format is None:
+            format = self._infer_format_from_path(output_path)
+        
         result = self.generate_from_image(
             image_path=image_path,
             quality=quality,
