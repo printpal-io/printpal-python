@@ -592,6 +592,7 @@ class PrintPal:
         poll_interval: int = 5,
         timeout: Optional[int] = None,
         callback: Optional[Callable[[GenerationStatus], None]] = None,
+        quality: Optional[Quality] = None,
     ) -> GenerationStatus:
         """
         Wait for a generation to complete.
@@ -603,8 +604,14 @@ class PrintPal:
             generation_uid: The unique identifier for the generation.
             poll_interval: Seconds between status checks (default: 5).
             timeout: Maximum seconds to wait. If None, automatically determined
-                based on quality level (e.g., 10 min for super, 20 min for superplus_texture).
+                based on quality level:
+                - default/high: 2-3 minutes
+                - ultra: 5 minutes
+                - super: 6 minutes
+                - superplus: 8 minutes
+                - super_texture/superplus_texture: 10 minutes
             callback: Optional function called with status after each poll.
+            quality: Quality level used for generation (for auto-timeout).
         
         Returns:
             GenerationStatus: Final status of the generation.
@@ -626,19 +633,21 @@ class PrintPal:
         """
         start_time = time.time()
         
-        # Get initial status to determine quality and timeout
+        # Get initial status
         status = self.get_status(generation_uid)
         
         if timeout is None:
-            # Use quality-aware timeout with generous buffer
-            quality_str = status.quality or "default"
-            try:
-                quality = Quality(quality_str)
-                # Use predefined timeout values that account for variability
+            # Use provided quality first, then try status, then default
+            if quality is not None:
                 timeout = GENERATION_TIMEOUTS.get(quality, 600)
-            except ValueError:
-                # Unknown quality, use generous default (10 minutes)
-                timeout = 600
+            else:
+                quality_str = status.quality or "default"
+                try:
+                    quality_enum = Quality(quality_str)
+                    timeout = GENERATION_TIMEOUTS.get(quality_enum, 600)
+                except ValueError:
+                    # Unknown quality, use generous default (10 minutes)
+                    timeout = 600
         
         while True:
             if callback:
@@ -671,6 +680,7 @@ class PrintPal:
         poll_interval: int = 5,
         timeout: Optional[int] = None,
         callback: Optional[Callable[[GenerationStatus], None]] = None,
+        quality: Optional[Quality] = None,
     ) -> Path:
         """
         Wait for generation to complete and download the result.
@@ -683,6 +693,7 @@ class PrintPal:
             poll_interval: Seconds between status checks.
             timeout: Maximum seconds to wait.
             callback: Optional function called with status after each poll.
+            quality: Quality level used for generation (for auto-timeout).
         
         Returns:
             Path: Path to the downloaded file.
@@ -701,6 +712,7 @@ class PrintPal:
             poll_interval=poll_interval,
             timeout=timeout,
             callback=callback,
+            quality=quality,
         )
         return self.download(generation_uid, output_path)
     
@@ -781,6 +793,7 @@ class PrintPal:
             poll_interval=poll_interval,
             timeout=timeout,
             callback=callback,
+            quality=quality,
         )
     
     # =========================================================================

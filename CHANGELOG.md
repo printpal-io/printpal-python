@@ -5,6 +5,13 @@ All notable changes to the PrintPal Python client will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-02-03
+
+### Fixed
+
+- Quality parameter now properly passes through the call chain (`generate_and_download` -> `wait_and_download` -> `wait_for_completion`) for correct auto-timeout calculation
+- Previously, auto-timeout was incorrectly defaulting to 120 seconds regardless of quality level because quality wasn't being passed through
+
 ## [1.0.2] - 2025-02-03
 
 ### Changed

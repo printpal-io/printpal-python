@@ -42,7 +42,7 @@ from printpal.constants import (
     GENERATION_TIMEOUTS,
 )
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __author__ = "PrintPal"
 __email__ = "support@printpal.io"
 
