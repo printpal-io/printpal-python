@@ -39,9 +39,10 @@ from printpal.constants import (
     Format,
     CREDIT_COSTS,
     ESTIMATED_TIMES,
+    GENERATION_TIMEOUTS,
 )
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 __author__ = "PrintPal"
 __email__ = "support@printpal.io"
 
@@ -70,4 +71,5 @@ __all__ = [
     "Format",
     "CREDIT_COSTS",
     "ESTIMATED_TIMES",
+    "GENERATION_TIMEOUTS",
 ]

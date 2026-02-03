@@ -12,7 +12,7 @@ long_description = readme_path.read_text(encoding="utf-8") if readme_path.exists
 
 setup(
     name="printpal",
-    version="1.0.1",
+    version="1.0.2",
     author="PrintPal",
     author_email="support@printpal.io",
     description="Python client for the PrintPal 3D Generation API",

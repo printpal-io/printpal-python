@@ -5,6 +5,23 @@ All notable changes to the PrintPal Python client will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-02-03
+
+### Changed
+
+- Quality-aware timeouts: `wait_for_completion` and `generate_and_download` now automatically use appropriate timeouts based on quality level
+  - default/high: 2-3 minutes
+  - ultra: 5 minutes
+  - super: 6 minutes
+  - superplus: 8 minutes
+  - super_texture/superplus_texture: 10 minutes
+- Updated estimated generation times to match actual production values
+- Added `GENERATION_TIMEOUTS` constant for users who want to customize timeouts
+
+### Fixed
+
+- Fixed timeout errors when using super, superplus, and texture quality levels (previously defaulted to 60 seconds which was too short)
+
 ## [1.0.1] - 2025-02-03
 
 ### Changed

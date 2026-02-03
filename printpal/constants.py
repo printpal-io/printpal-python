@@ -60,15 +60,26 @@ CREDIT_COSTS = {
     Quality.SUPERPLUS_TEXTURE: 50,
 }
 
-# Estimated generation times in seconds
+# Estimated generation times in seconds (typical values, can vary)
 ESTIMATED_TIMES = {
     Quality.DEFAULT: 20,
     Quality.HIGH: 30,
-    Quality.ULTRA: 60,
-    Quality.SUPER: 180,
-    Quality.SUPER_TEXTURE: 360,
-    Quality.SUPERPLUS: 240,
-    Quality.SUPERPLUS_TEXTURE: 720,
+    Quality.ULTRA: 50,
+    Quality.SUPER: 120,
+    Quality.SUPER_TEXTURE: 300,
+    Quality.SUPERPLUS: 180,
+    Quality.SUPERPLUS_TEXTURE: 500,
+}
+
+# Recommended timeout values in seconds (includes buffer for variability)
+GENERATION_TIMEOUTS = {
+    Quality.DEFAULT: 120,        # 2 minutes
+    Quality.HIGH: 180,           # 3 minutes
+    Quality.ULTRA: 300,          # 5 minutes
+    Quality.SUPER: 360,          # 6 minutes
+    Quality.SUPER_TEXTURE: 600,  # 10 minutes
+    Quality.SUPERPLUS: 480,      # 8 minutes
+    Quality.SUPERPLUS_TEXTURE: 600,  # 10 minutes
 }
 
 # Resolution descriptions

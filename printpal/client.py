@@ -20,6 +20,7 @@ from printpal.constants import (
     Format,
     CREDIT_COSTS,
     ESTIMATED_TIMES,
+    GENERATION_TIMEOUTS,
     DEFAULT_BASE_URL,
     DEFAULT_TIMEOUT,
     UPLOAD_TIMEOUT,
@@ -601,7 +602,8 @@ class PrintPal:
         Args:
             generation_uid: The unique identifier for the generation.
             poll_interval: Seconds between status checks (default: 5).
-            timeout: Maximum seconds to wait. If None, uses estimated time * 2.
+            timeout: Maximum seconds to wait. If None, automatically determined
+                based on quality level (e.g., 10 min for super, 20 min for superplus_texture).
             callback: Optional function called with status after each poll.
         
         Returns:
@@ -628,14 +630,15 @@ class PrintPal:
         status = self.get_status(generation_uid)
         
         if timeout is None:
-            # Default timeout based on quality
+            # Use quality-aware timeout with generous buffer
             quality_str = status.quality or "default"
             try:
                 quality = Quality(quality_str)
-                estimated = ESTIMATED_TIMES.get(quality, 60)
+                # Use predefined timeout values that account for variability
+                timeout = GENERATION_TIMEOUTS.get(quality, 600)
             except ValueError:
-                estimated = 60
-            timeout = estimated * 3  # 3x estimated time as default timeout
+                # Unknown quality, use generous default (10 minutes)
+                timeout = 600
         
         while True:
             if callback:
@@ -725,8 +728,14 @@ class PrintPal:
             quality: Quality level for generation.
             format: Output format. If None, will be inferred from output_path
                 extension or default to STL.
-            poll_interval: Seconds between status checks.
-            timeout: Maximum seconds to wait.
+            poll_interval: Seconds between status checks (default: 5).
+            timeout: Maximum seconds to wait. If None, automatically determined
+                based on quality level:
+                - default/high: 2-3 minutes
+                - ultra: 5 minutes
+                - super: 6 minutes
+                - superplus: 8 minutes
+                - super_texture/superplus_texture: 10 minutes
             callback: Optional status callback function.
             **kwargs: Additional parameters for generation.
         
@@ -740,14 +749,14 @@ class PrintPal:
             # Extension determines format (OBJ)
             path = client.generate_and_download("my_image.png", "my_model.obj")
             
-            # Explicit format overrides extension
+            # Higher quality with automatic timeout (10 min for super)
             path = client.generate_and_download(
                 "my_image.png",
                 "my_model.stl",
-                format=Format.GLB  # Will save as GLB despite .stl extension
+                quality=Quality.SUPER
             )
             
-            # With quality setting
+            # With progress callback
             path = client.generate_and_download(
                 "my_image.png",
                 "my_model.stl",
