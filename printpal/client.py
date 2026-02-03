@@ -4,6 +4,9 @@ PrintPal API Client
 Main client class for interacting with the PrintPal 3D Generation API.
 """
 
+# Note: The main class is named PrintPal for simplicity.
+# PrintPalClient and printpal are provided as aliases for convenience.
+
 import os
 import time
 import logging
@@ -46,16 +49,16 @@ from printpal.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class PrintPalClient:
+class PrintPal:
     """
     Client for the PrintPal 3D Generation API.
     
     Example usage:
     
-        from printpal import PrintPalClient, Quality, Format
+        from printpal import PrintPal, Quality, Format
         
         # Initialize the client
-        client = PrintPalClient(api_key="pp_live_your_api_key_here")
+        client = PrintPal(api_key="pp_live_your_api_key_here")
         
         # Check your credit balance
         credits = client.get_credits()
@@ -78,6 +81,9 @@ class PrintPalClient:
         api_key: Your PrintPal API key. Can also be set via PRINTPAL_API_KEY environment variable.
         base_url: API base URL. Defaults to https://printpal.io
         timeout: Default request timeout in seconds.
+    
+    Note:
+        You can also use PrintPalClient or printpal as aliases for this class.
     """
     
     def __init__(
@@ -683,3 +689,9 @@ class PrintPalClient:
     def close(self):
         """Close the client session."""
         self._session.close()
+
+
+# Aliases for convenience
+# Users can import any of these: PrintPal, PrintPalClient, or printpal
+PrintPalClient = PrintPal
+printpal = PrintPal

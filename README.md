@@ -1,10 +1,47 @@
-# PrintPal Python Client
+<p align="center">
+  <img src="printpal.png" alt="PrintPal Logo" width="200"/>
+</p>
 
-The official Python client for the PrintPal 3D Generation API. Transform images into high-quality 3D models using AI.
+<h1 align="center">PrintPal Python Client</h1>
 
-**Website:** https://printpal.io  
-**API Documentation:** https://printpal.io/api/documentation  
-**API Dashboard:** https://printpal.io/api-keys
+<p align="center">
+  <strong>AI-Powered Image to 3D Model Generation for 3D Printing</strong>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/printpal/"><img src="https://img.shields.io/pypi/v/printpal.svg" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/printpal/"><img src="https://img.shields.io/pypi/pyversions/printpal.svg" alt="Python versions"></a>
+  <a href="https://github.com/printpal-io/printpal-python/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+</p>
+
+<p align="center">
+  <a href="https://printpal.io">Website</a> |
+  <a href="https://printpal.io/api/documentation">API Docs</a> |
+  <a href="https://printpal.io/api-keys">Get API Key</a> |
+  <a href="https://printpal.io/buy-credits">Buy Credits</a>
+</p>
+
+---
+
+The official Python client for the **PrintPal 3D Generation API**. Convert images and text into high-quality, print-ready 3D models using state-of-the-art AI technology.
+
+**Perfect for:**
+- **3D Printing Businesses** automating custom model creation
+- **E-commerce Platforms** offering personalized 3D printed products
+- **Game Developers** generating 3D assets from concept art
+- **Product Designers** rapidly prototyping from sketches
+- **Makers and Creators** bringing ideas to life
+- **Manufacturing Companies** streamlining CAD model generation
+
+## Why PrintPal?
+
+- **Image to 3D in Seconds**: Convert any image into a printable 3D model
+- **Text to 3D**: Describe what you want and get a 3D model
+- **Print-Ready Formats**: Export directly to STL, OBJ, GLB, PLY, or FBX
+- **Multiple Quality Tiers**: From quick previews to ultra-high resolution (1024 cubed)
+- **Texture Support**: Generate textured models for realistic renders
+- **Simple API**: Get started with just a few lines of code
+- **Scalable**: Process thousands of models programmatically
 
 ## Installation
 
@@ -37,18 +74,20 @@ export PRINTPAL_API_KEY="pp_live_your_api_key_here"
 Or pass it directly to the client:
 
 ```python
-from printpal import PrintPalClient
+from printpal import PrintPal
 
-client = PrintPalClient(api_key="pp_live_your_api_key_here")
+client = PrintPal(api_key="pp_live_your_api_key_here")
 ```
+
+Note: You can also use `PrintPalClient` or `printpal` as aliases if you prefer.
 
 ### 3. Generate a 3D Model
 
 ```python
-from printpal import PrintPalClient
+from printpal import PrintPal
 
 # Initialize client
-client = PrintPalClient()
+client = PrintPal()
 
 # Generate a 3D model from an image (simplest method)
 output_path = client.generate_and_download(
@@ -75,9 +114,9 @@ print(f"3D model saved to: {output_path}")
 ### Basic Image to 3D
 
 ```python
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
-client = PrintPalClient()
+client = PrintPal()
 
 # One-liner: generate and download
 path = client.generate_and_download("image.png", "model.stl")
@@ -88,9 +127,9 @@ path = client.generate_and_download("image.png", "model.stl")
 For more control over the process:
 
 ```python
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
-client = PrintPalClient()
+client = PrintPal()
 
 # Step 1: Submit generation request
 result = client.generate_from_image(
@@ -116,9 +155,9 @@ if status.is_completed:
 Generate ultra-high-quality models with super resolution:
 
 ```python
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
-client = PrintPalClient()
+client = PrintPal()
 
 # Super resolution (768 cubed) - geometry only
 result = client.generate_from_image(
@@ -147,9 +186,9 @@ result = client.generate_from_image(
 Generate 3D models from text descriptions:
 
 ```python
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
-client = PrintPalClient()
+client = PrintPal()
 
 result = client.generate_from_prompt(
     prompt="a cute robot toy",
@@ -165,9 +204,9 @@ Note: Text to 3D is only available for default, high, and ultra quality levels.
 ### Check Credits
 
 ```python
-from printpal import PrintPalClient
+from printpal import PrintPal
 
-client = PrintPalClient()
+client = PrintPal()
 
 # Get credit balance
 credits = client.get_credits()
@@ -184,9 +223,9 @@ for name, tier in pricing.credits.items():
 For long-running generations or web applications:
 
 ```python
-from printpal import PrintPalClient, Quality
+from printpal import PrintPal, Quality
 
-client = PrintPalClient()
+client = PrintPal()
 
 # Submit and get the UID
 result = client.generate_from_image("image.png", quality=Quality.SUPER)
@@ -208,9 +247,9 @@ elif status.is_failed:
 ### With Progress Callback
 
 ```python
-from printpal import PrintPalClient
+from printpal import PrintPal
 
-client = PrintPalClient()
+client = PrintPal()
 
 def on_status(status):
     print(f"Status: {status.status}")
@@ -226,9 +265,9 @@ path = client.wait_and_download(
 ### Context Manager
 
 ```python
-from printpal import PrintPalClient
+from printpal import PrintPal
 
-with PrintPalClient() as client:
+with PrintPal() as client:
     credits = client.get_credits()
     print(f"Credits: {credits.credits}")
 ```
@@ -261,7 +300,7 @@ Note: Texture generation (super_texture, superplus_texture) only supports GLB an
 
 ```python
 from printpal import (
-    PrintPalClient,
+    PrintPal,
     AuthenticationError,
     InsufficientCreditsError,
     ValidationError,
@@ -270,7 +309,7 @@ from printpal import (
     RateLimitError,
 )
 
-client = PrintPalClient()
+client = PrintPal()
 
 try:
     result = client.generate_from_image("image.png")
@@ -290,14 +329,16 @@ except NotFoundError:
 
 ## API Reference
 
-### PrintPalClient
+### PrintPal
 
 The main client class for interacting with the PrintPal API.
+
+Aliases: `PrintPalClient`, `printpal` (for those who prefer different naming conventions)
 
 #### Constructor
 
 ```python
-PrintPalClient(
+PrintPal(
     api_key: str = None,      # API key (or set PRINTPAL_API_KEY env var)
     base_url: str = "https://printpal.io",  # API base URL
     timeout: int = 60,        # Request timeout in seconds
@@ -373,6 +414,26 @@ python examples/basic_generation.py path/to/image.png
 - 10,000 requests per day per account
 - 5 concurrent generations maximum
 
+## Use Cases
+
+### 3D Printing Services
+Automate custom 3D model creation for your print-on-demand business. Accept customer images and automatically generate print-ready STL files.
+
+### E-commerce Product Customization
+Let customers upload images and receive custom 3D printed products. Perfect for personalized gifts, figurines, and merchandise.
+
+### Game Development and Digital Assets
+Convert concept art and sketches into 3D game assets. Generate low-poly to high-poly models with or without textures.
+
+### Rapid Prototyping
+Transform product sketches and designs into 3D prototypes. Accelerate your design-to-print workflow.
+
+### Educational and Maker Projects
+Build applications that help students and makers bring their creative ideas into the physical world through 3D printing.
+
+### Manufacturing and CAD
+Streamline CAD model generation from reference images. Integrate with your existing manufacturing pipeline.
+
 ## Support
 
 - Email: support@printpal.io
@@ -382,3 +443,14 @@ python examples/basic_generation.py path/to/image.png
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+  <strong>PrintPal: AI 3D Model Generation API for 3D Printing</strong><br>
+  Image to 3D | Text to 3D | STL Generator | 3D Printing API | AI 3D Modeling
+</p>
+
+<p align="center">
+  <a href="https://printpal.io">printpal.io</a>
+</p>

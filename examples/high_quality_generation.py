@@ -26,7 +26,7 @@ import os
 import sys
 from pathlib import Path
 
-from printpal import PrintPalClient, Quality, Format, CREDIT_COSTS, ESTIMATED_TIMES
+from printpal import PrintPal, Quality, Format, CREDIT_COSTS, ESTIMATED_TIMES
 
 
 # Configuration
@@ -69,7 +69,7 @@ def main():
     print(f"Estimated time: {estimated_time} seconds ({estimated_time // 60} minutes)")
     print()
     
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     # Check credits
     credits = client.get_credits()

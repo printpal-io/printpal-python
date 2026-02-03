@@ -19,7 +19,7 @@ Usage:
 import os
 import sys
 
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
 
 # Configuration
@@ -36,7 +36,7 @@ def main():
     print()
     
     # Initialize client
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     # Check credits
     credits = client.get_credits()

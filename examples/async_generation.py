@@ -28,7 +28,7 @@ import sys
 import json
 from pathlib import Path
 
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
 
 # Configuration
@@ -212,7 +212,7 @@ def main():
         return
     
     command = sys.argv[1].lower()
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     if command == "submit":
         if len(sys.argv) < 3:

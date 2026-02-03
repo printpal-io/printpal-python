@@ -6,9 +6,17 @@ Transform images into high-quality 3D models using AI.
 
 Website: https://printpal.io
 Documentation: https://printpal.io/api/documentation
+
+Usage:
+    from printpal import PrintPal
+    client = PrintPal(api_key="pp_live_your_api_key")
+    
+    # Or use any of these aliases:
+    from printpal import PrintPalClient  # Same as PrintPal
+    from printpal import printpal        # Same as PrintPal (lowercase)
 """
 
-from printpal.client import PrintPalClient
+from printpal.client import PrintPal, PrintPalClient, printpal
 from printpal.models import (
     GenerationRequest,
     GenerationStatus,
@@ -38,8 +46,10 @@ __author__ = "PrintPal"
 __email__ = "support@printpal.io"
 
 __all__ = [
-    # Client
+    # Client (main class and aliases)
+    "PrintPal",
     "PrintPalClient",
+    "printpal",
     # Models
     "GenerationRequest",
     "GenerationStatus",

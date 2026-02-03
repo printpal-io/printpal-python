@@ -14,7 +14,7 @@ Usage:
 """
 
 import os
-from printpal import PrintPalClient
+from printpal import PrintPal
 
 
 # Configuration
@@ -26,7 +26,7 @@ def main():
     print("=" * 50)
     
     # Initialize client
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     # Check API health (does not require authentication)
     try:

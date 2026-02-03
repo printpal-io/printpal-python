@@ -22,7 +22,7 @@ import time
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from printpal import PrintPalClient, Quality, Format, CREDIT_COSTS
+from printpal import PrintPal, Quality, Format, CREDIT_COSTS
 
 
 # Configuration
@@ -113,7 +113,7 @@ def main():
     print()
     
     # Initialize client
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     # Check credits
     credits = client.get_credits()

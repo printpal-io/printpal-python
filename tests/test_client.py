@@ -12,7 +12,9 @@ from pathlib import Path
 import json
 
 from printpal import (
+    PrintPal,
     PrintPalClient,
+    printpal,
     Quality,
     Format,
     AuthenticationError,
@@ -144,22 +146,27 @@ class TestCreditsInfo:
         assert info.username == "testuser"
 
 
-class TestPrintPalClient:
-    """Tests for PrintPalClient."""
+class TestPrintPal:
+    """Tests for PrintPal client."""
     
     def test_init_with_api_key(self):
-        client = PrintPalClient(api_key="pp_live_test123")
+        client = PrintPal(api_key="pp_live_test123")
         assert client.api_key == "pp_live_test123"
         assert client.base_url == "https://printpal.io"
     
     def test_init_without_api_key(self):
         with pytest.raises(AuthenticationError):
-            PrintPalClient(api_key=None)
+            PrintPal(api_key=None)
     
     def test_init_with_env_var(self, monkeypatch):
         monkeypatch.setenv("PRINTPAL_API_KEY", "pp_live_env_key")
-        client = PrintPalClient()
+        client = PrintPal()
         assert client.api_key == "pp_live_env_key"
+    
+    def test_aliases_are_same_class(self):
+        """Test that PrintPal, PrintPalClient, and printpal are the same class."""
+        assert PrintPal is PrintPalClient
+        assert PrintPal is printpal
     
     @patch("printpal.client.requests.Session")
     def test_get_credits(self, mock_session_class):
@@ -174,7 +181,7 @@ class TestPrintPalClient:
         mock_session.request.return_value = mock_response
         mock_session_class.return_value = mock_session
         
-        client = PrintPalClient(api_key="pp_live_test")
+        client = PrintPal(api_key="pp_live_test")
         credits = client.get_credits()
         
         assert credits.credits == 50
@@ -189,7 +196,7 @@ class TestPrintPalClient:
         mock_session.request.return_value = mock_response
         mock_session_class.return_value = mock_session
         
-        client = PrintPalClient(api_key="pp_live_invalid")
+        client = PrintPal(api_key="pp_live_invalid")
         
         with pytest.raises(AuthenticationError):
             client.get_credits()
@@ -207,7 +214,7 @@ class TestPrintPalClient:
         mock_session.request.return_value = mock_response
         mock_session_class.return_value = mock_session
         
-        client = PrintPalClient(api_key="pp_live_test")
+        client = PrintPal(api_key="pp_live_test")
         
         with pytest.raises(InsufficientCreditsError) as exc_info:
             client._request("POST", "/api/generate")
@@ -220,7 +227,7 @@ class TestClientContextManager:
     """Tests for context manager functionality."""
     
     def test_context_manager(self):
-        with PrintPalClient(api_key="pp_live_test") as client:
+        with PrintPal(api_key="pp_live_test") as client:
             assert client.api_key == "pp_live_test"
         # Session should be closed after context
 

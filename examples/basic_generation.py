@@ -23,7 +23,7 @@ import os
 import sys
 from pathlib import Path
 
-from printpal import PrintPalClient, Quality, Format
+from printpal import PrintPal, Quality, Format
 
 
 # Configuration
@@ -50,7 +50,7 @@ def main():
     print()
     
     # Initialize the client
-    client = PrintPalClient(api_key=API_KEY)
+    client = PrintPal(api_key=API_KEY)
     
     # Check credits first
     credits = client.get_credits()
