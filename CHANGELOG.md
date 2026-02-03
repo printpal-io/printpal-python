@@ -5,6 +5,18 @@ All notable changes to the PrintPal Python client will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-02-03
+
+### Changed
+
+- Default output format changed from GLB to STL for better 3D printing compatibility
+- Smart filename handling: when output_path has a recognized extension (stl, glb, obj, ply, fbx), that format is automatically used
+- Extension correction: if requested format differs from filename extension, the extension is corrected to prevent corrupted/misleading files
+
+### Fixed
+
+- Filename extension now always matches actual file format to prevent user confusion
+
 ## [1.0.0] - 2025-02-03
 
 ### Added

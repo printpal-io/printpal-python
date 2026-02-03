@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "printpal"
-version = "1.0.0"
+version = "1.0.1"
 description = "Python client for the PrintPal 3D Generation API"
 readme = "README.md"
 license = {text = "MIT"}
