@@ -12,8 +12,8 @@ from printpal.constants import Quality, Format
 class GenerationRequest:
     """Request parameters for 3D model generation."""
     
-    quality: Quality = Quality.DEFAULT
-    """Quality level for generation."""
+    quality: Quality = Quality.SUPER
+    """Quality level for generation. Defaults to SUPER for best results."""
     
     format: Format = Format.STL
     """Output format for the 3D model. Defaults to STL for 3D printing."""

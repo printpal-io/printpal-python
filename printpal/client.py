@@ -310,7 +310,7 @@ class PrintPal:
     def generate_from_image(
         self,
         image_path: Union[str, Path, BinaryIO],
-        quality: Quality = Quality.DEFAULT,
+        quality: Quality = Quality.SUPER,
         format: Format = Format.STL,
         num_inference_steps: int = 20,
         guidance_scale: float = 5.0,
@@ -720,7 +720,7 @@ class PrintPal:
         self,
         image_path: Union[str, Path, BinaryIO],
         output_path: Optional[Union[str, Path]] = None,
-        quality: Quality = Quality.DEFAULT,
+        quality: Quality = Quality.SUPER,
         format: Optional[Format] = None,
         poll_interval: int = 5,
         timeout: Optional[int] = None,

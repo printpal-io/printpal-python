@@ -5,6 +5,14 @@ All notable changes to the PrintPal Python client will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-02-05
+
+### Changed
+
+- Default quality for image-to-3D generation changed from `DEFAULT` to `SUPER` for best results out of the box
+- This affects `generate_from_image()`, `generate_and_download()`, and `GenerationRequest` default
+- `generate_from_prompt()` still defaults to `DEFAULT` since SUPER quality requires an image input
+
 ## [1.0.3] - 2025-02-03
 
 ### Fixed
